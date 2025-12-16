@@ -1,10 +1,11 @@
 import React from "react";
-import { TextInput, StyleSheet } from "react-native";
+import { TextInput, StyleSheet} from "react-native";
 
 interface InputProps {
   placeholder: string;
   value: string;
   onChangeText?: (text: string) => void;
+  secureTextEntry?: boolean;
 }
 
 function Input(props: InputProps) {
@@ -15,6 +16,7 @@ function Input(props: InputProps) {
       placeholderTextColor="#7A7A7A"
       value={props.value}
       onChangeText={props.onChangeText}
+      secureTextEntry={props.secureTextEntry}
     />
   );
 }

@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginPage from "../templates/LoginPage";
+import LoginPage from "../screens/templates/LoginPage";
 import React from "react";
 
 const PublicStack = createNativeStackNavigator();
