@@ -8,6 +8,8 @@ interface User {
   id: string;
   email: string;
   name?: string;
+  photo?: string;
+  location?: string;
 }
 
 interface AuthState {
@@ -49,6 +51,8 @@ export const useAuthStore = create<AuthState>()(
             id: foundUser.id,
             email: foundUser.email,
             name: foundUser.name,
+            photo: foundUser.photo,
+            location: foundUser.location,
           };
 
           set({

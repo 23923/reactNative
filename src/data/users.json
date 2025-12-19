@@ -5,7 +5,9 @@
       "username": "mariem",
       "password": "mariem",
       "email": "mariem@example.com",
-      "name": "Mariem"
+      "name": "Mariem",
+      "photo": "mariem",
+      "location": "Sfax, Tunisia"
     }
   ]
 }
