@@ -2,10 +2,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, Image, ScrollView } from 'react-native';
 import { useAuthStore } from '../../stores/authStore';
+import { useNavigation } from '@react-navigation/native';
 import Button from '../../components/Button';
 
 function HomePage() {
   const { logout } = useAuthStore();
+  const navigation = useNavigation();
+
+  const handleGetStarted = () => {
+    navigation.navigate('Categories' as never);
+  };
 
   return (
     <ImageBackground 
@@ -43,7 +49,7 @@ function HomePage() {
           </Text>
           
           <Text style={styles.subtitle}>
-            The best grain, the finest roas, the{'\n'}most powerful flavor.
+            The best grain, the finest roast, the{'\n'}most powerful flavor.
           </Text>
 
           {/* Pagination Dots */}
@@ -56,7 +62,7 @@ function HomePage() {
           {/* Get Started Button */}
           <Button
             title="Get started"
-            onPress={logout}
+            onPress={handleGetStarted}
             style={styles.getStartedButton}
             textStyle={styles.getStartedButtonText}
           />
@@ -100,18 +106,18 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     alignItems: 'center',
-    paddingBottom: 20,
+    paddingBottom: 40,
+    paddingTop: 80,
   },
   productImageContainer: {
     width: '100%',
-    height: 320,
+    height: 280,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 40,
-    marginBottom: 20,
+    marginBottom: 30,
   },
   productImage: {
-    width: '75%',
+    width: '80%',
     height: '100%',
   },
   contentContainer: {
@@ -120,20 +126,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainTitle: {
-    fontSize: 34,
+    fontSize: 32,
     fontWeight: '600',
     color: '#FFFFFF',
     textAlign: 'center',
-    lineHeight: 42,
+    lineHeight: 40,
     letterSpacing: 0.5,
   },
   subtitle: {
     fontSize: 14,
     fontWeight: '400',
-    color: '#A9A9A9',
+    color: '#A2A2A2',
     textAlign: 'center',
-    lineHeight: 22,
-    marginTop: 8,
+    lineHeight: 20,
+    marginTop: 10,
   },
   paginationContainer: {
     flexDirection: 'row',
@@ -157,6 +163,7 @@ const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: '#00A859',
     paddingVertical: 18,
+    paddingHorizontal: 40,
     borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -165,6 +172,8 @@ const styles = StyleSheet.create({
     elevation: 8,
     marginTop: 0,
     height: 56,
+    width: '85%',
+    maxWidth: 320,
   },
   getStartedButtonText: {
     fontSize: 16,

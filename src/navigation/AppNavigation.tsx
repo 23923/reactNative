@@ -4,6 +4,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuthStore } from '../stores/authStore';
 import LoginPage from '../screens/templates/LoginPage';
 import HomePage from '../screens/templates/HomePage';
+import CategoriesPage from '../screens/templates/CategoriesPage';
+import SearchPage from '../screens/templates/SearchPage';
+import ProductDetailPage from '../screens/templates/ProductDetailPage';
+import CartPage from '../screens/templates/CartPage';
+import FavoritesPage from '../screens/templates/FavoritesPage';
 import BootSplash from "react-native-bootsplash";
 
 
@@ -29,6 +34,11 @@ function AppNavigation() {
         // 🔐 Screens Privées (connecté)
         <>
           <Stack.Screen name="Home" component={HomePage} />
+          <Stack.Screen name="Categories" component={CategoriesPage} />
+          <Stack.Screen name="Search" component={SearchPage} />
+          <Stack.Screen name="ProductDetail" component={ProductDetailPage} />
+          <Stack.Screen name="Cart" component={CartPage} />
+          <Stack.Screen name="Favorites" component={FavoritesPage} />
           {/* <Stack.Screen name="Profile" component={ProfilePage} /> */}
         </>
       )}
