@@ -10,11 +10,12 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useCartStore } from '../../stores/cartStore';
+import { useFavoritesStore } from '../../stores/favoritesStore';
 import NavButton from '../../components/NavButton';
 import Button from '../../components/Button';
 // Mapping des images de produits
 const productImages: { [key: string]: any } = {
-  "cappuccino": require("../../../assets/images/café_liégeois.png"),
+  "cappuccino": require("../../../assets/images/cafe_liegeois.png"),
   "Cappuccino_withchocolat": require("../../../assets/images/Cappuccino_withchocolat.png"),
   "Latte_with_milk": require("../../../assets/images/Latte_with_milk.png"),
   "home": require("../../../assets/images/home.png"),
@@ -22,10 +23,12 @@ const productImages: { [key: string]: any } = {
 
 function CartPage() {
   const navigation = useNavigation();
-  const { items, updateQuantity, removeFromCart, getSubtotal, getDiscount, getTotal } = useCartStore();
+  const { items, updateQuantity, getSubtotal, getDiscount, getTotal } = useCartStore();
+  const favorites = useFavoritesStore((state) => state.favorites);
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
 
   const getProductImage = (imageKey: string) => {
-    return productImages[imageKey] || productImages["home"];
+    return productImages[imageKey] || productImages.home;
   };
 
   const handleHomePress = () => {
@@ -34,6 +37,18 @@ function CartPage() {
 
   const handleCategoriesPress = () => {
     navigation.navigate('Categories' as never);
+  };
+
+  const handleFavoritesPress = () => {
+    navigation.navigate('Favorites' as never);
+  };
+
+  const handleCartPress = () => {
+    navigation.navigate('Cart' as never);
+  };
+
+  const handleProfilePress = () => {
+    navigation.navigate('Profile' as never);
   };
 
   const handleBuy = () => {
@@ -87,10 +102,10 @@ function CartPage() {
                     <Text style={styles.productPrice}>Rp{item.price.toLocaleString()}</Text>
                   </View>
                   <Button 
-                    style={styles.favoriteButton}
-                    onPress={() => {}}
+                    style={[styles.favoriteButton, favorites.includes(item.id) && styles.favoriteButtonActive]}
+                    onPress={() => toggleFavorite(item.id)}
                   >
-                    <Text style={styles.heartIcon}>♡</Text>
+                    <Text style={[styles.heartIcon, favorites.includes(item.id) && styles.heartIconActive]}>♡</Text>
                   </Button>
                 </View>
 
@@ -179,9 +194,9 @@ function CartPage() {
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <NavButton iconName="home" onPress={handleHomePress} />
-        <NavButton iconName="heart-outline" onPress={() => {}} />
-        <NavButton iconName="bag-outline" onPress={() => {}} isActive={true} />
-        <NavButton iconName="person-outline" onPress={() => {}} />
+        <NavButton iconName="heart-outline" onPress={handleFavoritesPress} />
+        <NavButton iconName="bag-outline" onPress={handleCartPress} isActive={true} />
+        <NavButton iconName="person-outline" onPress={handleProfilePress} />
       </View>
     </SafeAreaView>
   );
@@ -305,9 +320,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
+  favoriteButtonActive: {
+    backgroundColor: '#FDECEF',
+    borderRadius: 14,
+  },
   heartIcon: {
     fontSize: 18,
     color: '#2F4B26',
+  },
+  heartIconActive: {
+    color: '#ED5151',
   },
   optionsContainer: {
     marginTop: 8,

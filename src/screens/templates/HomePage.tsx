@@ -1,12 +1,10 @@
 // src/screens/HomePage.tsx
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, Image, ScrollView } from 'react-native';
-import { useAuthStore } from '../../stores/authStore';
 import { useNavigation } from '@react-navigation/native';
 import Button from '../../components/Button';
 
 function HomePage() {
-  const { logout } = useAuthStore();
   const navigation = useNavigation();
 
   const handleGetStarted = () => {
@@ -20,14 +18,6 @@ function HomePage() {
       resizeMode="cover"
     >
       {/* Logout Button */}
-      <View style={styles.logoutButtonContainer}>
-        <Button
-          title="Déconnexion"
-          onPress={logout}
-          style={styles.logoutButton}
-          textStyle={styles.logoutButtonText}
-        />
-      </View>
 
       <ScrollView 
         contentContainerStyle={styles.scrollContent}
@@ -78,31 +68,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  logoutButtonContainer: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-    zIndex: 10,
-  },
-  logoutButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    marginTop: 0,
-    height: 40,
-    width: 'auto',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  logoutButtonText: {
-    color: '#00A859',
-    fontSize: 14,
-    fontWeight: '700',
-  },
   scrollContent: {
     flexGrow: 1,
     alignItems: 'center',
@@ -150,18 +115,19 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#3D3D3D',
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#D8B68A',
   },
   activeDot: {
     width: 28,
+    height: 12,
     borderRadius: 6,
-    backgroundColor: '#00A859',
+    backgroundColor: '#00512C',
   },
   getStartedButton: {
-    backgroundColor: '#00A859',
+    backgroundColor: '#00512C',
     paddingVertical: 18,
     paddingHorizontal: 40,
     borderRadius: 16,

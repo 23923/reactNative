@@ -9,6 +9,7 @@ import SearchPage from '../screens/templates/SearchPage';
 import ProductDetailPage from '../screens/templates/ProductDetailPage';
 import CartPage from '../screens/templates/CartPage';
 import FavoritesPage from '../screens/templates/FavoritesPage';
+import ProfilePage from '../screens/templates/ProfilePage';
 import BootSplash from "react-native-bootsplash";
 
 
@@ -39,7 +40,7 @@ function AppNavigation() {
           <Stack.Screen name="ProductDetail" component={ProductDetailPage} />
           <Stack.Screen name="Cart" component={CartPage} />
           <Stack.Screen name="Favorites" component={FavoritesPage} />
-          {/* <Stack.Screen name="Profile" component={ProfilePage} /> */}
+          <Stack.Screen name="Profile" component={ProfilePage} />
         </>
       )}
     </Stack.Navigator>

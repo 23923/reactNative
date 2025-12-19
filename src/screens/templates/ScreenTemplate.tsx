@@ -1,6 +1,6 @@
 // src/screens/templates/ScreenTemplate.tsx
 import React, { PropsWithChildren } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ScreenTemplateProps extends PropsWithChildren {
@@ -12,23 +12,31 @@ function ScreenTemplate({ children, isDarkMode = false }: ScreenTemplateProps) {
   
   return (
     <View
-      style={{
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-        backgroundColor: isDarkMode ? '#1a1a1a' : '#f5f5f5',
-        flex: 1
-      }}
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+          backgroundColor: isDarkMode ? '#1a1a1a' : '#f5f5f5',
+        },
+      ]}
     >
-      <ScrollView 
-        style={{ flex: 1 }}
-        contentContainerStyle={{ flexGrow: 1 }}
-      >
+      <View style={styles.inner}>
         {children}
-      </ScrollView>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  inner: {
+    flex: 1,
+  },
+});
 
 export default ScreenTemplate;

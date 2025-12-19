@@ -33,6 +33,7 @@ export default function NavButton({
 const styles = StyleSheet.create({
   navItem: {
     flex: 1,
+    width: '100%',
     alignItems: 'center',
     paddingVertical: 8,
   },

@@ -10,13 +10,14 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCartStore } from '../../stores/cartStore';
+import { useFavoritesStore } from '../../stores/favoritesStore';
 import Button from '../../components/Button';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 // Mapping des images de produits
 const productImages: { [key: string]: any } = {
-  "cappuccino": require("../../../assets/images/café_liégeois.png"),
+  "cappuccino": require("../../../assets/images/cafe_liegeois.png"),
   "Cappuccino_withchocolat": require("../../../assets/images/Cappuccino_withchocolat.png"),
   "Latte_with_milk": require("../../../assets/images/Latte_with_milk.png"),
   "home": require("../../../assets/images/home.png"),
@@ -26,6 +27,9 @@ function ProductDetailPage() {
   const navigation = useNavigation();
   const route = useRoute();
   const { product } = route.params as any;
+  const favorites = useFavoritesStore((state) => state.favorites);
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  const isFavorite = favorites.includes(product.id);
 
   const [selectedSize, setSelectedSize] = useState('Small');
   const [selectedSugar, setSelectedSugar] = useState('No Sugar');
@@ -55,7 +59,7 @@ function ProductDetailPage() {
     if (product.image && productImages[product.image]) {
       return productImages[product.image];
     }
-    return productImages["home"]; // Image par défaut
+    return productImages.home; // Image par défaut
   };
 
   const aboutText = product.about || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat....";
@@ -75,10 +79,21 @@ function ProductDetailPage() {
         {/* Header Buttons */}
         <View style={styles.headerButtons}>
           <Button style={styles.iconButton} onPress={handleBackPress}>
-            <Text style={styles.iconText}>‹</Text>
+            <Image
+              source={require('../../../assets/images/back.png')}
+              style={styles.headerIconImage}
+              resizeMode="contain"
+            />
           </Button>
-          <Button style={styles.iconButton} onPress={() => {}}>
-            <Text style={styles.heartIcon}>♡</Text>
+          <Button style={styles.iconButton} onPress={() => toggleFavorite(product.id)}>
+            <Image
+              source={require('../../../assets/images/green_heart.png')}
+              style={[
+                styles.headerIconImage,
+                isFavorite && styles.headerIconImageActive,
+              ]}
+              resizeMode="contain"
+            />
           </Button>
         </View>
 
@@ -90,7 +105,11 @@ function ProductDetailPage() {
 
         {/* Rating Badge */}
         <View style={styles.ratingBadge}>
-          <Text style={styles.starIcon}>★</Text>
+          <Image
+            source={require('../../../assets/images/star.png')}
+            style={styles.starIcon}
+            resizeMode="contain"
+          />
           <Text style={styles.ratingText}>{product.rating}</Text>
         </View>
       </View>
@@ -201,19 +220,20 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#2F4B26',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
   },
-  iconText: {
-    fontSize: 24,
-    color: '#fff',
-    fontWeight: '300',
-    marginTop: -2,
+  headerIconImage: {
+    width: 18,
+    height: 18,
   },
-  heartIcon: {
-    fontSize: 20,
-    color: '#fff',
+  headerIconImageActive: {
+    tintColor: '#00512C',
   },
   titleOverlay: {
     position: 'absolute',
@@ -242,15 +262,16 @@ const styles = StyleSheet.create({
     right: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2F4B26',
+    backgroundColor: '#C1925B',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,
   },
   starIcon: {
-    fontSize: 14,
-    color: '#FFD700',
+    width: 16,
+    height: 16,
     marginRight: 4,
+    tintColor: '#FFFFFF',
   },
   ratingText: {
     fontSize: 14,

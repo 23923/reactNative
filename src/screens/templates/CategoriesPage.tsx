@@ -25,23 +25,26 @@ const uniqueCategories = Array.from(new Set(productsData.map(product => product.
 const categories = ['All Coffee', ...uniqueCategories];
 
 const productImages: { [key: string]: any } = {
-  "cappuccino": require("C:/3eme/reactNative/AwesomeProject/assets/images/café_liégeois.png"),
-  "Cappuccino_withchocolat": require("C:/3eme/reactNative/AwesomeProject/assets/images/Cappuccino_withchocolat.png"),
-  "Latte_with_milk": require("C:/3eme/reactNative/AwesomeProject/assets/images/Latte_with_milk.png"),
+  "cappuccino": require("../../../assets/images/cafe_liegeois.png"),
+  "Cappuccino_withchocolat": require("../../../assets/images/Cappuccino_withchocolat.png"),
+  "Latte_with_milk": require("../../../assets/images/Latte_with_milk.png"),
+  "home": require("../../../assets/images/home.png"),
 };
 
 // Photos des utilisateurs
 const userPhotos: { [key: string]: any } = {
-  "mariem": require("C:/3eme/reactNative/AwesomeProject/assets/images/mariem.png"),
-  "yufi": require("C:/3eme/reactNative/AwesomeProject/assets/images/mariem.png"), // Placeholder pour yufi
+  "mariem": require("../../../assets/images/mariem.png"),
+  "yufi": require("../../../assets/images/mariem.png"), // Placeholder pour yufi
   // Ajoutez d'autres photos d'utilisateurs ici
 };
 
 function CategoriesPage() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
+  const logout = useAuthStore((state) => state.logout);
   const [selectedCategory, setSelectedCategory] = useState('All Coffee');
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   
   // Utiliser le store global pour les favoris
   const favorites = useFavoritesStore((state) => state.favorites);
@@ -59,7 +62,7 @@ function CategoriesPage() {
         });
       }
     }
-  }, [user?.id]);
+  }, [user, setUser]);
 
   // Obtenir le message de salutation selon l'heure
   const getGreeting = () => {
@@ -82,29 +85,40 @@ function CategoriesPage() {
     return null;
   };
 
+  const toggleProfileMenu = () => setIsProfileMenuOpen((prev) => !prev);
+  const closeProfileMenu = () => setIsProfileMenuOpen(false);
+  const handleLogout = () => {
+    setIsProfileMenuOpen(false);
+    logout();
+  };
+
   // Filtrer les produits selon la catégorie sélectionnée
   const filteredProducts = selectedCategory === 'All Coffee'
     ? productsData
     : productsData.filter(product => product.category === selectedCategory);
 
   const handleProductPress = (product: any) => {
-    navigation.navigate('ProductDetail' as never, { product } as never);
+    navigation.navigate('ProductDetail', { product });
   };
 
   const handleSearchPress = () => {
-    navigation.navigate('Search' as never);
+    navigation.navigate('Search');
   };
 
   const handleHomePress = () => {
-    navigation.navigate('Categories' as never);
+    navigation.navigate('Categories');
   };
 
   const handleCartPress = () => {
-    navigation.navigate('Cart' as never);
+    navigation.navigate('Cart');
   };
 
   const handleFavoritesPress = () => {
-    navigation.navigate('Favorites' as never);
+    navigation.navigate('Favorites');
+  };
+
+  const handleProfilePress = () => {
+    navigation.navigate('Profile');
   };
 
   return (
@@ -114,7 +128,7 @@ function CategoriesPage() {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.profileSection}>
-          <View style={styles.profileImage}>
+          <Button style={styles.profileImage} onPress={toggleProfileMenu}>
             {getUserPhoto() ? (
               <Image 
                 source={getUserPhoto()} 
@@ -124,9 +138,9 @@ function CategoriesPage() {
             ) : (
               <Text style={styles.profileImageText}>{getInitial()}</Text>
             )}
-          </View>
+          </Button>
           <View style={styles.headerText}>
-            <Text style={styles.locationLabel}>📍 {user?.location || 'Unknown Location'}</Text>
+            <Text style={styles.locationLabel}>📍{user?.location || 'Unknown Location'}</Text>
             <Text style={styles.greeting}>{getGreeting()}, {user?.name || 'User'}</Text>
           </View>
         </View>
@@ -142,6 +156,20 @@ function CategoriesPage() {
           />
         </Button>
       </View>
+
+      {isProfileMenuOpen && (
+        <View style={styles.menuOverlay} pointerEvents="box-none">
+          <Button style={styles.menuBackdrop} onPress={closeProfileMenu} />
+          <View style={styles.profileMenu}>
+            <Button 
+              title="Deconnexion" 
+              onPress={handleLogout} 
+              style={[styles.menuItem, styles.menuButton]}
+              textStyle={styles.menuItemText}
+            />
+          </View>
+        </View>
+      )}
 
       {/* Search Bar with Filter */}
       <View style={styles.searchContainer}>
@@ -176,7 +204,7 @@ function CategoriesPage() {
           columnWrapperStyle={styles.productRow}
           renderItem={({ item }) => {
             // If the image field is a known local key, use require, else fallback
-            let imageSource = productImages[item.image] || productImages["home"];
+            let imageSource = productImages[item.image] || productImages.home;
             // If the image field looks like a path (e.g. starts with 'assets/'), use uri
             if (typeof item.image === 'string' && item.image.startsWith('assets/')) {
               imageSource = { uri: item.image };
@@ -242,7 +270,7 @@ function CategoriesPage() {
         />
         <NavButton 
           iconName="person-outline" 
-          onPress={() => {}} 
+          onPress={handleProfilePress} 
         />
       </View>
     </SafeAreaView>
@@ -357,19 +385,65 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 4,
   },
+  menuOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 30,
+  },
+  menuBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+  },
+  profileMenu: {
+    position: 'absolute',
+    top: 86,
+    right: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 6,
+    minWidth: 160,
+  },
+  menuItem: {
+    paddingVertical: 10,
+  },
+  menuButton: {
+    backgroundColor: '#F5F5F5',
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    alignItems: 'flex-start',
+  },
+  menuItemText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#2F4B26',
+  },
   bottomNav: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     justifyContent: 'space-around',
-    borderTopWidth: 0.5,
-    borderTopColor: '#F0F0F0',
-    elevation: 4,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    elevation: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
   },
 });
 

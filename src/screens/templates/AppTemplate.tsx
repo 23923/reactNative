@@ -14,7 +14,7 @@ function AppTemplate(props: PropsWithChildren) {
     if (systemColorScheme) {
       setDarkMode(systemColorScheme === 'dark');
     }
-  }, []);
+  }, [setDarkMode, systemColorScheme]);
 
   return (
     <SafeAreaProvider>

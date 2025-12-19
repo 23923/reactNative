@@ -14,14 +14,14 @@ import productsData from '../../data/products.json';
 import { useFavoritesStore } from '../../stores/favoritesStore';
 
 const productImages: { [key: string]: any } = {
-  "cappuccino": require("../../../assets/images/café_liégeois.png"),
+  "cappuccino": require("../../../assets/images/cafe_liegeois.png"),
   "Cappuccino_withchocolat": require("../../../assets/images/Cappuccino_withchocolat.png"),
   "Latte_with_milk": require("../../../assets/images/Latte_with_milk.png"),
   "home": require("../../../assets/images/home.png"),
 };
 
 function FavoritesPage() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   
   // Utiliser le store global pour les favoris
   const favorites = useFavoritesStore((state) => state.favorites);
@@ -30,11 +30,15 @@ function FavoritesPage() {
   const favoriteProducts = productsData.filter(p => favorites.includes(p.id));
 
   const handleProductPress = (product: any) => {
-    navigation.navigate('ProductDetail' as never, { product } as never);
+    navigation.navigate('ProductDetail', { product });
   };
 
   const handleHomePress = () => {
     navigation.navigate('Categories' as never);
+  };
+
+  const handleFavoritesPress = () => {
+    navigation.navigate('Favorites' as never);
   };
 
   const handleCartPress = () => {
@@ -42,7 +46,7 @@ function FavoritesPage() {
   };
 
   const handleProfilePress = () => {
-    // navigation.navigate('Profile' as never);
+    navigation.navigate('Profile' as never);
   };
 
   return (
@@ -63,7 +67,7 @@ function FavoritesPage() {
         columnWrapperStyle={styles.productRow}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => {
-          const imageSource = productImages[item.image] || productImages["home"];
+          const imageSource = productImages[item.image] || productImages.home;
           return (
             <ProductCard
               id={item.id}
@@ -93,11 +97,11 @@ function FavoritesPage() {
         />
         <NavButton 
           iconName="heart" 
-          onPress={() => {}} 
+          onPress={handleFavoritesPress} 
           isActive={true}
         />
         <NavButton 
-          iconName="cart-outline" 
+          iconName="bag-outline" 
           onPress={handleCartPress} 
         />
         <NavButton 

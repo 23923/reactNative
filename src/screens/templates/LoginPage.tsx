@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Image, Alert, ActivityIndicator } from 'react-native';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { useAuthStore } from '../../stores/authStore';
@@ -10,6 +10,10 @@ function LoginPage() {
   const { login, isLoading, error } = useAuthStore();
 
   const handleSubmit = async () => {
+    if (isLoading) {
+      return;
+    }
+
     if (!username || !password) {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs');
       return;
@@ -52,9 +56,17 @@ function LoginPage() {
           />
 
           <Button 
-            title={isLoading ? "Connexion..." : "Se connecter"} 
-            onPress={handleSubmit} 
-          />
+            onPress={handleSubmit}
+            style={[styles.ctaButton, isLoading && styles.ctaButtonDisabled]}
+          >
+            <View style={styles.ctaContent}>
+              {isLoading && <ActivityIndicator size="small" color="#fff" style={styles.ctaSpinner} />}
+              <Text style={styles.ctaButtonText}>
+                {isLoading ? "Connexion..." : "Se connecter"}
+              </Text>
+              {!isLoading && <Text style={styles.ctaArrow}>→</Text>}
+            </View>
+          </Button>
           
           {error && <Text style={styles.errorText}>{error}</Text>}
         </View>
@@ -107,6 +119,41 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 10,
     textAlign: 'center',
+  },
+  ctaButton: {
+    width: '100%',
+    marginTop: 10,
+    backgroundColor: '#00512C',
+    borderRadius: 14,
+    paddingVertical: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  ctaButtonDisabled: {
+    opacity: 0.8,
+  },
+  ctaContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  ctaButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.2,
+  },
+  ctaArrow: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  ctaSpinner: {
+    marginRight: 4,
   },
 });
 
